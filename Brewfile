@@ -22,6 +22,9 @@ brew "rclone"
 brew "pkgconf"
 brew "doppler"
 
+# Keepresso is distributed through its maintainer's tap.
+tap "gyorgysh/keepresso"
+
 # Authentication and macOS permissions are manual.
 cask "1password"
 cask "1password-cli"
@@ -30,5 +33,4 @@ cask "tailscale-app"
 cask "chatgpt"
 cask "spotify"
 cask "ghostty"
-
-# Amphetamine: Mac App Store, after App Store sign-in.
+cask "gyorgysh/keepresso/keepresso"

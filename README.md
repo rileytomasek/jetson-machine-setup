@@ -113,10 +113,10 @@ credential CLIs. Installing these does not authenticate them, run scans, start
 services, configure backups, or grant access. No Docker, full Xcode, alternate
 shells, or personal shell customization is installed by default.
 
-The Brewfile installs the ChatGPT desktop app, Spotify, and Ghostty. Open each app and
-sign in separately. The old Homebrew `codex-app` cask is deprecated; use the
-`chatgpt` cask for the current app. Install Amphetamine from the Mac App Store
-when needed (requires App Store authentication).
+The Brewfile installs the ChatGPT desktop app, Spotify, Ghostty, and Keepresso.
+Open the apps that need accounts and sign in separately. The old Homebrew
+`codex-app` cask is deprecated; use the `chatgpt` cask for the current app.
+Keepresso comes from its maintainer's Homebrew tap and needs no Apple ID.
 Terminal, Safari, Screen Sharing, and launchd are built into macOS.
 
 ## 4. Accounts and permissions (manual)
@@ -169,9 +169,12 @@ tailnet connectivity. Do not symlink the official launcher back to our wrapper.
   on the controlling device; it does not need to be installed on this host.
 - Test access over Tailscale from the controlling device. Do not expose Screen
   Sharing through a public router port forward.
-- Configure on-power wake behavior and Amphetamine if closed-lid use is needed.
-  Keep ventilation clear and test actual closed-lid operation on AC; installing
-  a keep-awake app alone is not proof that the intended hardware setup works.
+- Configure on-power wake behavior. If closed-lid use is needed, enable
+  Keepresso's closed-display mode and set it to "Only while brewing" so the
+  sleep override ends with the keep-awake session. This needs administrator
+  approval (or its optional helper). Keep ventilation clear and test actual
+  closed-lid operation on AC, including Tailscale and Screen Sharing access;
+  installing a keep-awake app alone is not proof that this hardware setup works.
 - Test screen lock/unlock, disconnect/reconnect, and restart recovery. Keep a
   local recovery path: FileVault boot unlock can prevent unattended recovery.
 - Review startup apps in System Settings > General > Login Items & Extensions.
