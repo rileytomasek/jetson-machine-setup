@@ -109,7 +109,7 @@ credential CLIs. Installing these does not authenticate them, run scans, start
 services, configure backups, or grant access. No Docker, full Xcode, alternate
 shells, or personal shell customization is installed by default.
 
-The Brewfile installs the ChatGPT desktop app and Spotify. Open each app and
+The Brewfile installs the ChatGPT desktop app, Spotify, and Ghostty. Open each app and
 sign in separately. The old Homebrew `codex-app` cask is deprecated; use the
 `chatgpt` cask for the current app. Install Amphetamine from the Mac App Store
 when needed (requires App Store authentication).

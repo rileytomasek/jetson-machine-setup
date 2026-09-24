@@ -28,5 +28,6 @@ cask "google-chrome"
 cask "tailscale-app"
 cask "chatgpt"
 cask "spotify"
+cask "ghostty"
 
 # Amphetamine: Mac App Store, after App Store sign-in.
