@@ -1,6 +1,7 @@
 # Host utilities; runtime versions belong in mise.toml.
 brew "git"
 brew "gh"
+brew "tmux"
 brew "ripgrep"
 brew "jq"
 brew "uv"
