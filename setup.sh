@@ -2,7 +2,7 @@
 set -euo pipefail
 if [[ "${1:-}" == --help ]]; then
   printf '%s\n' 'Usage: /bin/bash setup.sh' \
-    'Installs declared apps/tools/runtimes and configures fresh zsh terminals.' \
+    'Installs apps/tools/runtimes, configures zsh, and opens login apps.' \
     'Does not sign in, start services, or grant macOS permissions.'
   exit 0
 fi
@@ -46,6 +46,7 @@ uv python install "$jetson_python" --default
 git lfs install --skip-repo
 jetson_configure_shell "${ZDOTDIR:-$HOME}"
 /bin/bash "$jetson_root/setup-tailscale.sh"
+/bin/bash "$jetson_root/setup-login-apps.sh"
 
 /bin/bash "$jetson_root/check.sh"
 printf '%s\n' 'Setup complete. Open a new terminal (or run: exec /bin/zsh -l).' \

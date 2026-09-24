@@ -80,7 +80,11 @@ clone instead of repeating `git clone`. Homebrew installation can be rerun;
    exposes mise shims, uv's Python executables, and Homebrew in login,
    interactive, and noninteractive zsh shells. No personal dotfiles are copied.
 8. Exposes the already installed Tailscale app CLI using `setup-tailscale.sh`.
-9. Runs `check.sh` from outside the repo in fresh shells with a minimal inherited
+9. Installs a per-user LaunchAgent to open Google Chrome, ChatGPT, and Ghostty
+   at login. It runs on the next login; remove
+   `~/Library/LaunchAgents/com.jetson.machine-setup.open-login-apps.plist` and
+   `~/.local/bin/jetson-open-login-apps` to disable it.
+10. Runs `check.sh` from outside the repo in fresh shells with a minimal inherited
    PATH. Missing commands or broken runtime invocations fail the setup.
 
 Open a new Terminal afterward, or run `exec /bin/zsh -l`. To verify again:
@@ -170,8 +174,9 @@ tailnet connectivity. Do not symlink the official launcher back to our wrapper.
   a keep-awake app alone is not proof that the intended hardware setup works.
 - Test screen lock/unlock, disconnect/reconnect, and restart recovery. Keep a
   local recovery path: FileVault boot unlock can prevent unattended recovery.
-- Configure needed login items. Don't disable FileVault or enable automatic
-  login merely to make a remote-access test pass.
+- Review startup apps in System Settings > General > Login Items & Extensions.
+  Don't disable FileVault or enable automatic login merely to make a
+  remote-access test pass.
 
 ## 6. Migrate work, not the old user account
 
@@ -221,7 +226,7 @@ before pushing; use a fresh history rather than importing personal dotfiles.
 ## Local validation (no package installs)
 
 ```sh
-for script in bootstrap.sh setup.sh setup-tailscale.sh check.sh bin/tailscale lib/shell.sh tests/shell.sh tests/tailscale.sh tests/check-python.sh tests/fixtures/tailscale; do
+for script in bootstrap.sh setup.sh setup-tailscale.sh setup-login-apps.sh check.sh bin/tailscale lib/shell.sh tests/shell.sh tests/tailscale.sh tests/check-python.sh tests/fixtures/tailscale; do
   bash -n "$script" || break
 done
 ruby -c Brewfile
