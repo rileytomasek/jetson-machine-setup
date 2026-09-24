@@ -1,0 +1,5 @@
+# Baseline major-version tracks, not exact pins.
+# App repositories should declare their own tested versions.
+[tools]
+node = "24"
+bun = "1"
