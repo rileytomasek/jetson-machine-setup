@@ -26,7 +26,7 @@ cask "1password"
 cask "1password-cli"
 cask "google-chrome"
 cask "tailscale-app"
+cask "chatgpt"
+cask "spotify"
 
-# Optional: brew install --cask spotify
-# Codex: current official desktop download (old codex-app cask is deprecated).
 # Amphetamine: Mac App Store, after App Store sign-in.

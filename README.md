@@ -109,10 +109,10 @@ credential CLIs. Installing these does not authenticate them, run scans, start
 services, configure backups, or grant access. No Docker, full Xcode, alternate
 shells, or personal shell customization is installed by default.
 
-Install the current Codex desktop app from its official distribution. The old
-Homebrew `codex-app` cask is deprecated; it is intentionally not included here.
-Install Amphetamine from the Mac App Store when needed (requires App Store
-authentication). Optional music app: `brew install --cask spotify`.
+The Brewfile installs the ChatGPT desktop app and Spotify. Open each app and
+sign in separately. The old Homebrew `codex-app` cask is deprecated; use the
+`chatgpt` cask for the current app. Install Amphetamine from the Mac App Store
+when needed (requires App Store authentication).
 Terminal, Safari, Screen Sharing, and launchd are built into macOS.
 
 ## 4. Accounts and permissions (manual)
