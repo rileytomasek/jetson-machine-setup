@@ -1,7 +1,7 @@
 # Jetson machine setup
 
 Lightweight setup for a dedicated Apple Silicon Mac. Independent of personal
-dotfiles: Homebrew owns apps/utilities, mise owns Node/Bun, and uv owns Python
+dotfiles: Homebrew owns apps/utilities, mise owns language runtimes, and uv owns Python
 environments. No account data, credentials, or infrastructure inventory belongs
 in this public repository. No configuration-management framework is required.
 
@@ -37,38 +37,76 @@ Internet and local administrator approval are needed; no GitHub or Apple Account
 login is required for bootstrap. The upstream Homebrew installer is downloaded
 from HEAD, so even a pinned bootstrap is not a fully locked installation.
 
-## 3. Install software
+## 3. Complete setup (also repairs an existing installation)
+
+If you already cloned the repo and ran the earlier instructions:
+
+```sh
+cd ~/jetson-workspace/machine-setup
+git pull --ff-only
+/bin/bash setup.sh
+```
+
+Otherwise, after bootstrap:
 
 ```sh
 mkdir -p ~/jetson-workspace
 git clone https://github.com/rileytomasek/jetson-machine-setup.git \
   ~/jetson-workspace/machine-setup
 cd ~/jetson-workspace/machine-setup
-brew bundle --file=Brewfile --no-upgrade
-less mise.toml
-mise trust
-mise install
-mise exec -- node --version
-mise exec -- bun --version
+/bin/bash setup.sh
 ```
 
 Cloning this public repository requires no authentication. Reuse an existing
 clone instead of repeating `git clone`. Homebrew installation can be rerun;
 `--no-upgrade` avoids opportunistic upgrades but does not lock package versions.
 
-The runtime configuration applies within this repository. To use the same
-baseline throughout the workspace without shell activation, explicitly set it:
+`setup.sh` performs all of these steps, stopping on failure:
+
+1. Runs the bootstrap checks (Command Line Tools and Homebrew).
+2. Installs the Brewfile without upgrading existing packages.
+3. Installs Node 24, Bun 1, pnpm 11, stable Go/Rust, and Ruby 3.4 through mise.
+   Rust includes Cargo, rustfmt, and Clippy.
+4. Copies the runtime manifest into mise's global `conf.d/jetson.toml` fragment
+   so defaults work outside this repository. Existing unrelated settings are
+   preserved. An unowned file at that path is never overwritten; changed owned
+   fragments are backed up. Existing global/project overrides can take priority.
+5. Explicitly installs Python 3.13 through uv, including `python`, `python3`,
+   and `python3.13`. uv alone is not a Python installation. The version is in
+   `.python-version`; `--default` is uv's currently experimental alias option.
+6. Initializes Git LFS for the user, without installing a hook in this repo.
+7. Adds a small PATH line to `.zshenv`, `.zprofile`, and `.zshrc` (or ZDOTDIR),
+   preserving existing content and avoiding duplicate lines on reruns. This
+   exposes mise shims, uv's Python executables, and Homebrew in login,
+   interactive, and noninteractive zsh shells. No personal dotfiles are copied.
+8. Runs `check.sh` from outside the repo in fresh shells with a minimal inherited
+   PATH. Missing commands or broken runtime invocations fail the setup.
+
+Open a new Terminal afterward, or run `exec /bin/zsh -l`. To verify again:
 
 ```sh
-mise use --global node@24 bun@1
-mise exec -- node --version
+/bin/bash check.sh
 ```
 
-These are major-version tracks, not exact pins. Projects should declare their
-own tested versions. Use `mise exec -- <command>` in terminal/background tasks;
-GUI apps do not necessarily inherit a terminal's PATH. Use `uv venv --python 3.13`
-inside a Python project when needed; don't install competing Python managers.
-No Docker, full Xcode, alternate shells, or extra runtimes by default.
+Runtime declarations are version tracks, not exact pins; rerunning installation
+may resolve newer releases. Projects should declare their own tested versions.
+Shims provide ordinary `node`, `bun`, `go`, etc. commands without interactive
+mise activation. `mise exec -- <command>` remains useful for explicitly selected
+environments. Use `uv venv`/`uv pip` for Python project dependencies; a global pip
+installation is not needed. Existing conflicting Python executables are not
+force-overwritten. Managed binaries take precedence over Homebrew's incidental
+runtime dependencies and macOS system Ruby/Python.
+
+GUI apps and launchd services do not necessarily read shell startup files. For
+those, configure an explicit PATH or invoke `/opt/homebrew/bin/mise exec -- ...`;
+do not assume that terminal success proves GUI tool availability. Restart apps
+after setup and verify their execution environment separately.
+
+The expanded Brewfile includes code/configuration tools, PDF/text/image/audio
+utilities, secret/vulnerability scanners, cloud-storage transfer tools, and
+credential CLIs. Installing these does not authenticate them, run scans, start
+services, configure backups, or grant access. No Docker, full Xcode, alternate
+shells, or personal shell customization is installed by default.
 
 Install the current Codex desktop app from its official distribution. The old
 Homebrew `codex-app` cask is deprecated; it is intentionally not included here.
@@ -123,12 +161,12 @@ migration inventory, account identifiers, and backup destinations private.
 
 ## Maintenance
 
-- Add tools/apps by editing Brewfile, then rerun the bundle command.
+- Add tools/apps by editing Brewfile, then rerun `setup.sh`.
 - Review changes with `git diff` before applying them.
 - Check package declarations with `brew bundle check --file=Brewfile`.
 - Upgrade deliberately during a recoverable maintenance window with
   `brew update` and `brew bundle upgrade --file=Brewfile`.
-- Update runtime declarations separately and rerun project tests.
+- Update runtime declarations separately, rerun `setup.sh`, and run project tests.
 - Do not run automatic bundle cleanup: undeclared software is not necessarily
   unwanted. Do not restart remote-access services during unattended work.
 - Back up local-only data and test restoration. Git is not a backup for ignored
@@ -150,4 +188,16 @@ before pushing; use a fresh history rather than importing personal dotfiles.
 - [uv Python environments](https://docs.astral.sh/uv/pip/environments/)
 - [Codex download](https://openai.com/codex/)
 
-Syntax and manifest checks do not establish fresh-machine or physical acceptance.
+## Local validation (no package installs)
+
+```sh
+for script in bootstrap.sh setup.sh check.sh lib/shell.sh tests/shell.sh; do
+  bash -n "$script" || break
+done
+ruby -c Brewfile
+bash tests/shell.sh
+```
+
+The shell test uses a temporary ZDOTDIR, never changes the real user's shell
+files, and checks idempotency, preservation, and all three zsh modes. Syntax and
+manifest checks do not establish fresh-machine or physical acceptance.

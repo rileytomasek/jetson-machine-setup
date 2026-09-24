@@ -1,5 +1,10 @@
-# Baseline major-version tracks, not exact pins.
+# Managed by jetson-machine-setup; edit repository mise.toml instead.
+# Baseline version tracks, not exact pins. Reruns may resolve newer releases.
 # App repositories should declare their own tested versions.
 [tools]
 node = "24"
 bun = "1"
+pnpm = "11"
+go = "latest"
+rust = { version = "stable", profile = "minimal", components = ["rustfmt", "clippy"] }
+ruby = "3.4"
