@@ -1,0 +1,4 @@
+#!/bin/bash
+printf 'cli=%s\n' "${TAILSCALE_BE_CLI:-unset}"
+printf 'executable=%s\n' "${0##*/}"
+printf 'arg=%s\n' "$@"

@@ -45,6 +45,7 @@ jetson_python="$(tr -d '[:space:]' < "$jetson_root/.python-version")"
 uv python install "$jetson_python" --default
 git lfs install --skip-repo
 jetson_configure_shell "${ZDOTDIR:-$HOME}"
+/bin/bash "$jetson_root/setup-tailscale.sh"
 
 /bin/bash "$jetson_root/check.sh"
 printf '%s\n' 'Setup complete. Open a new terminal (or run: exec /bin/zsh -l).' \

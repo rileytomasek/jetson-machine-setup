@@ -19,6 +19,8 @@ for jetson_mode in -lc -ic -c; do
     for tool in brew mise uv python python3 node npm bun pnpm go rustc cargo rustfmt ruby gem bundle git gh rg jq fd yq shellcheck shfmt yamllint git-lfs pdftotext ffmpeg magick pandoc gitleaks trivy rclone pkg-config doppler op; do
       command -v "$tool" || { print -u2 "MISSING: $tool"; exit 1; }
     done
+    command -v tailscale || { print -u2 "MISSING: tailscale; run bash setup-tailscale.sh"; exit 1; }
+    TAILSCALE_BE_CLI=1 tailscale version
     node --version
     bun --version
     pnpm --version

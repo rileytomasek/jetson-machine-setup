@@ -15,6 +15,7 @@ for mode in -lc -ic -c; do
   ZDOTDIR="$jetson_test_dir" PATH=/usr/bin:/bin /bin/zsh "$mode" '
     [[ "$PATH" == "${MISE_DATA_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/mise}/shims:${UV_PYTHON_BIN_DIR:-$HOME/.local/bin}:"* ]]
     command -v brew >/dev/null
+    [[ ":$PATH:" == *:/usr/local/bin:* ]]
   '
 done
 printf '%s\n' 'PASS: repeated setup preserves config and configures login, interactive, and noninteractive zsh PATH.'

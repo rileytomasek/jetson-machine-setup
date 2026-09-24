@@ -79,7 +79,8 @@ clone instead of repeating `git clone`. Homebrew installation can be rerun;
    preserving existing content and avoiding duplicate lines on reruns. This
    exposes mise shims, uv's Python executables, and Homebrew in login,
    interactive, and noninteractive zsh shells. No personal dotfiles are copied.
-8. Runs `check.sh` from outside the repo in fresh shells with a minimal inherited
+8. Exposes the already installed Tailscale app CLI using `setup-tailscale.sh`.
+9. Runs `check.sh` from outside the repo in fresh shells with a minimal inherited
    PATH. Missing commands or broken runtime invocations fail the setup.
 
 Open a new Terminal afterward, or run `exec /bin/zsh -l`. To verify again:
@@ -115,6 +116,35 @@ authentication). Optional music app: `brew install --cask spotify`.
 Terminal, Safari, Screen Sharing, and launchd are built into macOS.
 
 ## 4. Accounts and permissions (manual)
+
+### Tailscale CLI
+
+Full setup includes this step. To repair only the Tailscale command:
+
+```sh
+git pull --ff-only
+/bin/bash setup-tailscale.sh
+```
+
+The standalone app's official integration is **Settings > CLI integration >
+Show me how > Install Now** (macOS 13+). It installs `/usr/local/bin/tailscale`.
+For unattended command setup, this repository installs a small owned wrapper
+at `~/.local/bin/tailscale`: it prefers the official launcher if present, otherwise
+invokes `/Applications/Tailscale.app/Contents/MacOS/Tailscale` directly. Both
+paths use `TAILSCALE_BE_CLI=1` to force command-line mode. The wrapper is ours;
+direct app invocation and the environment variable are documented by Tailscale.
+This also supports the App Store app's bundled CLI.
+
+The step preserves unowned commands, ensures `/usr/local/bin` is on zsh's PATH,
+and checks `tailscale version` in fresh login, interactive, and noninteractive
+shells. It does not install a second daemon, change VPN configuration, sign in,
+or restart the app. Open a fresh terminal afterward and run `tailscale status`
+to check your connection privately. Version checks prove CLI execution, not
+tailnet connectivity. Do not symlink the official launcher back to our wrapper.
+
+[Official macOS CLI instructions](https://tailscale.com/docs/reference/tailscale-cli?tab=macos)
+
+### Sign-in and permissions
 
 - Sign in to the password manager using only the intended vault access.
 - Enroll Tailscale and allow only the required remote-access paths.
@@ -191,11 +221,12 @@ before pushing; use a fresh history rather than importing personal dotfiles.
 ## Local validation (no package installs)
 
 ```sh
-for script in bootstrap.sh setup.sh check.sh lib/shell.sh tests/shell.sh; do
+for script in bootstrap.sh setup.sh setup-tailscale.sh check.sh bin/tailscale lib/shell.sh tests/shell.sh tests/tailscale.sh tests/fixtures/tailscale; do
   bash -n "$script" || break
 done
 ruby -c Brewfile
 bash tests/shell.sh
+bash tests/tailscale.sh
 ```
 
 The shell test uses a temporary ZDOTDIR, never changes the real user's shell

@@ -1,0 +1,21 @@
+#!/bin/bash
+# Managed by jetson-machine-setup: Tailscale app CLI wrapper.
+set -euo pipefail
+
+jetson_tailscale_exec() {
+  local launcher="$1" app="$2"
+  shift 2
+  if [[ -x "$launcher" ]]; then
+    exec /usr/bin/env TAILSCALE_BE_CLI=1 "$launcher" "$@"
+  elif [[ -x "$app" ]]; then
+    exec /usr/bin/env TAILSCALE_BE_CLI=1 "$app" "$@"
+  else
+    printf '%s\n' 'Tailscale app CLI not found. Install/open Tailscale in /Applications.' >&2
+    return 1
+  fi
+}
+
+if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
+  jetson_tailscale_exec /usr/local/bin/tailscale \
+    /Applications/Tailscale.app/Contents/MacOS/Tailscale "$@"
+fi
