@@ -221,14 +221,18 @@ before pushing; use a fresh history rather than importing personal dotfiles.
 ## Local validation (no package installs)
 
 ```sh
-for script in bootstrap.sh setup.sh setup-tailscale.sh check.sh bin/tailscale lib/shell.sh tests/shell.sh tests/tailscale.sh tests/fixtures/tailscale; do
+for script in bootstrap.sh setup.sh setup-tailscale.sh check.sh bin/tailscale lib/shell.sh tests/shell.sh tests/tailscale.sh tests/check-python.sh tests/fixtures/tailscale; do
   bash -n "$script" || break
 done
 ruby -c Brewfile
 bash tests/shell.sh
 bash tests/tailscale.sh
+bash tests/check-python.sh
 ```
 
 The shell test uses a temporary ZDOTDIR, never changes the real user's shell
 files, and checks idempotency, preservation, and all three zsh modes. Syntax and
 manifest checks do not establish fresh-machine or physical acceptance.
+
+The Python check runs from a separate file so shell quoting cannot change its
+source. Its test checks both the expected version and a deliberately wrong one.

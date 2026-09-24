@@ -33,12 +33,11 @@ for jetson_mode in -lc -ic -c; do
     bundle --version
     python --version
     python3 --version
-    python -c "import sys; assert '.'.join(map(str, sys.version_info[:2])) == sys.argv[1], sys.version" "$1"
-    python3 -c "import sys; assert '.'.join(map(str, sys.version_info[:2])) == sys.argv[1], sys.version" "$1"
-    python -c "import ssl, sqlite3, venv; print(\"Python stdlib checks passed\")"
+    python "$1" "$2"
+    python3 "$1" "$2"
     test "$(python -c "import sys; print(sys.executable)")" = "$(python3 -c "import sys; print(sys.executable)")" ||
       test "$(python -c "import sys; print(sys.prefix)")" = "$(python3 -c "import sys; print(sys.prefix)")"
-  ' -- "$jetson_python"
+  ' -- "$jetson_root/check-python.py" "$jetson_python"
 done
 printf '\nDeclared package check (no upgrades or installs):\n'
 /opt/homebrew/bin/brew bundle check --file="$jetson_root/Brewfile" --no-upgrade
