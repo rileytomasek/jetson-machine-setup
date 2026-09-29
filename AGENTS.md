@@ -3,6 +3,8 @@
 This public repository configures a dedicated Apple Silicon Mac. Keep it
 independent of personal dotfiles. `README.md` is the setup guide.
 
+- Use `master` as the repository base branch and the default for new repositories.
+
 - Put Mac apps and host utilities in `Brewfile`, language runtimes in
   `mise.toml`, and Python's version in `.python-version`.
 - Keep setup scripts safe to rerun. Preserve existing user configuration and

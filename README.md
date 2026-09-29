@@ -17,14 +17,14 @@ Download the script in Terminal:
 
 ```sh
 curl --fail --show-error --location --proto '=https' --tlsv1.2 \
-  https://raw.githubusercontent.com/rileytomasek/jetson-machine-setup/main/bootstrap.sh \
+  https://raw.githubusercontent.com/rileytomasek/jetson-machine-setup/master/bootstrap.sh \
   --output ~/Downloads/jetson-bootstrap.sh
 less ~/Downloads/jetson-bootstrap.sh
 /bin/bash ~/Downloads/jetson-bootstrap.sh
 ```
 
 Run the last command only after the download succeeds and you review the file.
-For a fixed reviewed revision, replace `main` in the URL with its commit SHA.
+For a fixed reviewed revision, replace `master` in the URL with its commit SHA.
 Do not pipe downloaded content directly into a shell.
 
 The script requests Apple's Command Line Tools installer if needed. Complete
@@ -60,6 +60,16 @@ cd ~/jetson-workspace/machine-setup
 Cloning this public repository requires no authentication. Reuse an existing
 clone instead of repeating `git clone`. Homebrew installation can be rerun;
 `--no-upgrade` avoids opportunistic upgrades but does not lock package versions.
+
+Use `master` for current releases. If an existing clone still has a local `main`
+branch, update it once before continuing:
+
+```sh
+git fetch origin
+git branch -m main master
+git branch --set-upstream-to=origin/master master
+git switch master
+```
 
 `setup.sh` performs all of these steps, stopping on failure:
 
